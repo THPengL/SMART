@@ -186,9 +186,9 @@ class Model(nn.Module):
         sim_inter_view = cosine_sim(H1, H2, device=self.device)
         sim_inter_view = torch.exp(sim_inter_view / tau)
         loss_ = torch.sum(sim_inter_view * W, dim=-1) / (torch.sum(sim_inter_view, dim=-1))
-        loss_inter_ncl = - torch.log(loss_).mean()
+        loss_inter_smc = - torch.log(loss_).mean()
 
-        return loss_inter_ncl
+        return loss_inter_smc
 
     def get_semantic_graph(self, score, flag, aligned_score):
         """

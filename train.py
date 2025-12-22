@@ -32,9 +32,9 @@ def train(model, optimizer, data_loader, config, logger, seed, device):
             score_all = model.cross_corr_coef_matrix(emb1, emb2)
             score_aligned = score_all[flag_batch, :]
             score_aligned = score_aligned[: , flag_batch]
-            loss_cvc = model.cross_corr_coef_loss(emb1[flag_batch],
-                                                  emb2[flag_batch],
-                                                  corr_coef_matrix=score_aligned
+            loss_cvc = model.VDA_loss(emb1[flag_batch],
+                                      emb2[flag_batch],
+                                      corr_coef_matrix=score_aligned
                                                   )
 
             # Semantic Matching Contrastive Learning
@@ -45,7 +45,7 @@ def train(model, optimizer, data_loader, config, logger, seed, device):
                                          score_aligned_diag
                                          )
             H1, H2 = model.high_level_project(emb1, emb2)
-            loss_ncl = model.cross_view_ncl(H1, H2, adj, tau=config['tau'])
+            loss_ncl = model.SMC_loss(H1, H2, adj, tau=config['tau'])
 
             loss = loss_rec + loss_cvc * config['lambda1'] + loss_ncl * config['lambda2']
 
